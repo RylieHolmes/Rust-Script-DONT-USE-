@@ -49,7 +49,7 @@ SUBTEXT_COLOR = "#A0A0A0"
 ACCENT_GREEN = "#2E7D32"
 ACCENT_RED = "#B71C1C"
 
-# --- FULL WEAPON DATA (FROM PROVIDED SOURCE) ---
+# --- FULL WEAPON DATA
 WEAPONS = {
     E_ASSAULT_RIFLE: {"pattern": [(0.000000,-2.257792),(0.323242,-2.300758),(0.649593,-2.299759),(0.848786,-2.259034),(1.075408,-2.323947),(1.268491,-2.215956),(1.330963,-2.236556),(1.336833,-2.218203),(1.505516,-2.143454),(1.504423,-2.233091),(1.442116,-2.270194),(1.478543,-2.204318),(1.392874,-2.165817),(1.480824,-2.177887),(1.597069,-2.270915),(1.449996,-2.145893),(1.369179,-2.270450),(1.582363,-2.298334),(1.516872,-2.235066),(1.498249,-2.238401),(1.465769,-2.331642),(1.564812,-2.242621),(1.517519,-2.235066),(1.422433,-2.211946),(1.553195,-2.248043),(1.510463,-2.285327),(1.553878,-2.240047),(1.520380,-2.221839),(1.553878,-2.240047),(1.553195,-2.248043)], "delay": 133.3 / 1000.0},
     E_MP5A4: {"pattern": [(0.125361,-1.052446),(-0.099548,-0.931548),(0.027825,-0.954094),(-0.013715,-0.851504),(-0.007947,-1.070579),(0.096096,-1.018017),(-0.045937,-0.794216),(0.034316,-1.112618),(-0.003968,-0.930040),(-0.009403,-0.888503),(0.140813,-0.970807),(-0.015052,-1.046551),(0.095699,-0.860475),(-0.269643,-1.038896),(0.000285,-0.840478),(0.018413,-1.038126),(0.099191,-0.851701),(0.199659,-0.893041),(-0.082660,-1.069278),(0.006826,-0.881493),(0.091709,-1.150956),(-0.108677,-0.965513),(0.169612,-1.099499),(-0.038244,-1.120084),(-0.085513,-0.876956),(0.136279,-1.047589),(0.196392,-1.039977),(-0.152513,-1.209291),(-0.214510,-0.956648),(0.034276,-0.095177)], "delay": 100.0 / 1000.0},
@@ -87,7 +87,7 @@ class AppState:
             "toggle_key": "x1",
             "recoil_randomization_radius": 3.0,
             "dpi": 800.0,
-            "reaction_time_randomness_ms": 20.0 # NEW: Control for randomized reaction time (0-X ms)
+            "reaction_time_randomness_ms": 20.0 
         }
         self.load_config()
 
@@ -160,7 +160,7 @@ def move_mouse_smoothly(dx, dy, duration, steps=20):
 
         time.sleep(duration / steps)
 
-# Removed: background_tremor_thread as per user request
+
 
 # --- BACKEND LOGIC ---
 def recoil_control_thread():
@@ -175,8 +175,7 @@ def recoil_control_thread():
                 recoil_active = True
                 print("Recoil control activated.") 
                 
-                # Randomized reaction time control
-                # Base 80ms + up to reaction_time_randomness_ms
+                
                 reaction_delay = 0.080 + random.uniform(0, app_state.reaction_time_randomness_ms / 1000.0)
                 time.sleep(reaction_delay) 
 
@@ -201,7 +200,7 @@ def recoil_control_thread():
                     scope_mult = SCOPES[app_state.current_scope]
                     muzzle_mult = MUZZLES[app_state.current_muzzle]
 
-                    # --- PRECISE PIXEL CONVERSION MATH (BASED ON YOUR PROVIDED FORMULA) ---
+                    # --- PRECISE PIXEL CONVERSION MATH
                     calculated_denominator = (-0.03 * \
                                               ((app_state.sensitivity * app_state.ads_sensitivity) * movement_factor) * \
                                               3.0 * \
@@ -235,7 +234,7 @@ def recoil_control_thread():
                     target_pixel_x *= compensation_strength
                     target_pixel_y *= compensation_strength
 
-                    # Perlin Noise Injection for organic movement (on top of circle randomization)
+                    # Perlin Noise Injection for organic movement 
                     noise_intensity = 2.5 
                     if progress < 0.2: noise_intensity *= random.uniform(1.2, 1.5) 
                     elif progress > 0.8: noise_intensity *= random.uniform(0.8, 1.0) 
@@ -246,7 +245,7 @@ def recoil_control_thread():
                     final_dx = target_pixel_x + noise_x
                     final_dy = target_pixel_y + noise_y
 
-                    # Removed: Micro-flicks/overcorrections as per user request
+                    
 
                     step_duration = weapon["delay"] * random.uniform(0.9, 1.1)
                     move_mouse_smoothly(final_dx, final_dy, step_duration)
@@ -323,7 +322,6 @@ class HoverButton(ctk.CTkButton):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_color = self.cget("fg_color")
-        # Hover binds are re-enabled as they seem stable now
         self.bind("<Enter>", self.on_enter)
         self.bind("<Leave>", self.on_leave)
     def on_enter(self, event): self.configure(fg_color=self.cget("hover_color"))
@@ -640,4 +638,5 @@ if __name__ == "__main__":
         time.sleep(0.1) 
         if 'mouse_listener' in locals() and mouse_listener.is_alive(): mouse_listener.stop()
         if 'keyboard_listener' in locals() and keyboard_listener.is_alive(): keyboard_listener.stop()
+
         print("Script finished.")
