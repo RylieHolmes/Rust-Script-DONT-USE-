@@ -1,0 +1,12 @@
+{
+    "current_weapon": "Assault Rifle",
+    "current_scope": "Holo",
+    "current_muzzle": "Suppressor",
+    "sensitivity": 0.49,
+    "ads_sensitivity": 0.59,
+    "fov": 90.0,
+    "toggle_key": "x1",
+    "recoil_randomization_radius": 5.0,
+    "dpi": 800.0,
+    "reaction_time_randomness_ms": 100.0
+}
