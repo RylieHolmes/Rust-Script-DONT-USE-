@@ -87,4 +87,4 @@ This was a personal project to see how far I could push Python for real-time sys
 
 ## 📄 License
 
-No License. avalible for public use and modification.
+No License. Available for public use and modification.
